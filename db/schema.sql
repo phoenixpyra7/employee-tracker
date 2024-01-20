@@ -1,7 +1,11 @@
+/* To drop the database only if it already exists */
 DROP DATABASE IF EXISTS employee_db;
+/* To create the database */
 CREATE DATABASE employee_db;
 USE employee_db;
 
+
+/* Creation of the tables */
 CREATE TABLE department (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30) UNIQUE NOT NULL,
