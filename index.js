@@ -1,9 +1,14 @@
 // importing packages
-const inquirer = require('inquirer')
-const db = require('./db/connection.js')
-require('console.table')
+const inquirer = require('inquirer');
+const db = require('./db/connection.js');
+require('console.table');
+const mysql = require('mysql2');
+const env = require('dotenv'); // or just 'env'?
 
 // set up inquirer here
+const prompt = inquirer.createPromptModule(); // does const db = sql.createConn replace this? line28
+
+
 // questions will go here
 // inquirer.prompt(questions)
 
@@ -19,6 +24,19 @@ if (data.answer === 'view all employees') {
 }
 
 // db functions
+// connect to the database
+const db = mysql.createConnection(
+  {
+      host: 'localhost',
+      user: 'root', //MySQL username
+      password: '', //MySQL password
+      database: 'staff_db'// should this be db_seeds.sql
+  },
+  console.log('Connected to the staff_db database.') // should this be db_seeds.sql
+);
+
+
+
 
 // view all employees
 function viewAllEmployees() {
