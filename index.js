@@ -12,7 +12,7 @@ const questions = [
   },
 ];
 
-// set up inquirer here
+// set up inquirer here- inquirer.prompt(questions)?
 function main() {
   prompt(questions).then((res) => {
     // this will all be in your inquirer's .then()
@@ -27,17 +27,12 @@ function main() {
   });
 }
 
-// questions will go here
-// inquirer.prompt(questions)
-
-// .then()
 // if/else statement or switch statement here
 // this will be based off of the user input
 // it will trigger the db functions
 
+
 // db functions
-
-
 function viewAllEmployees() {
   // code to retrieve all employees from the database
   db.promise()
@@ -75,6 +70,9 @@ function viewAllDepartments() {
     });
 }
 
+
+// questions will go here
+// inquirer.prompt(questions)
 function addDepartment() {
   prompt({
     type: "input",
@@ -94,7 +92,6 @@ function addDepartment() {
   })
 }
 
-// etc...
 // any bonuses will go here
 function calculateBonuses() {
   // code to calculate bonuses for employees
