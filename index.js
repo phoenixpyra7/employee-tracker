@@ -37,7 +37,7 @@ function main() {
 
 // db functions
 
-// view all employees
+
 function viewAllEmployees() {
   // code to retrieve all employees from the database
   db.promise()
@@ -50,9 +50,20 @@ function viewAllEmployees() {
       console.error(`Error with viewAllEmployees: ${err}`);
     });
 }
-
+function viewAllRoles() {
+  // code to retrieve all roles from the database
+  db.promise()
+    .query(`SELECT * FROM roles`)
+    .then(([rows]) => {
+      console.table(rows);
+    })
+    .then(() => main())
+    .catch((err) => {
+      console.error(`Error with viewAllRoles: ${err}`);
+    });
+}
 function viewAllDepartments() {
-  // code to retrieve all employees from the database
+  // code to retrieve all departments from the database
   db.promise()
     .query(`SELECT * FROM departments`)
     .then(([rows]) => {
