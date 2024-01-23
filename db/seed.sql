@@ -25,6 +25,6 @@ VALUES
     ('Stu', 'Shaginaw', 5, 2),
     ('Jessica', 'Gray', 2, 1),
     ('Alice', 'Kumar', 3, 1),
-    ('Sierra', 'Lugo', 6, NULL),
-    ('Tyler', 'Lucas', 7, NULL),
+    ('Robin', 'DePorter', 6, NULL),
+    ('Maria', 'Velarde', 7, NULL),
     ('Julia', 'Galtarossa', 8, 7);

@@ -16,25 +16,41 @@ const questions = [
 function main() {
   prompt(questions).then((res) => {
     // this will all be in your inquirer's .then() - not sure if correctly done
-    // this is to view info 
+
+    // this is to view all info 
     if (res.answer === "View All Employees") {
       viewAllEmployees();
     } else if (res.answer === "View All Departments") {
       viewAllDepartments();
-      // make an else if for view all roles
     }  else if (res.answer === "View All Roles") {
-        viewAllRoles();
+      viewAllRoles();
+    }  else if (res.answer === "View All Salarys") { // this may pose a problem so i mispelled it to match
+      viewAllSalarys();
+
     // This is to add info 
     } else if (res.answer === "Add An Employee") {
-        addEmployee();
+      addEmployee();
     } else if (res.answer === "Add A Department") {
-        addDepartment();
+      addDepartment();
     } else if (res.answer === "Add A Role") {
-        addRole();
+      addRole();
+    } else if (res.answer === "Add A Salary") {
+      addSalary();
+
+    // this is to update info 
+    } else if (res.answer === "Update Employee") {
+      updateEmployee(); 
+    } else if (res.answer === "Update Department") {
+      updateDepartment();
+    } else if (res.answer === "Update Role") {
+      updateRole();
+    } else if (res.answer === "Update Salary") {
+      updateSalary(); 
 
     // this will exit, need to fix code
-    } else if (res.answer === "Exit") {
-      addDepartment();
+    } else if (res.answer === "Exit Database") {
+      db.end();
+      console.log("You have sucessfully exited the database");  
   }});
 }
 
@@ -80,10 +96,23 @@ function viewAllDepartments() {
       console.error(`Error with viewAllDepartments: ${err}`);
     });
 }
-
+function viewAllSalaries() {
+  // code to retrieve all roles from the database
+  db.promise()
+    .query(`SELECT * FROM salarys`)
+    .then(([rows]) => {
+      console.table(rows);
+    })
+    .then(() => main())
+    .catch((err) => {
+      console.error(`Error with viewAllSalarys: ${err}`);
+    });
+}
 
 // questions will go here
 // inquirer.prompt(questions)
+
+// Adding a new department
 function addDepartment() {
   prompt({
     type: "input",
@@ -102,6 +131,72 @@ function addDepartment() {
       })
   })
 }
+//Adding a new role
+function addRole() {
+  prompt({
+    type: "input",
+    name: "role",
+    message: "What role would you like to add?",
+  }).then(res => {
+    let role = res.role
+    db.promise()
+      .query("INSERT INTO roles SET ?", {role})
+      .then(() => {
+        console.log(`Added ${role} to roles`);
+      })
+      .then(() => main())
+      .catch((err) => {
+        console.error(`Error with addRole: ${err}`);
+      })
+  })
+}
+
+//Adding a new employee
+function addAnEmployee(roles, managers) { // shouldn't this have more info in the ()?
+  prompt.questions = [ //should I remove the word questions?
+    {
+      type: "input",
+      name: "firstName",
+      message: "Enter the first name of the employee.",
+  },
+    {
+      type: "input",
+      name: "lastName",
+      message: "Enterthe last name of the employee.",
+    },
+    {
+      type: "list",
+      name: "roleId",
+      message: "Selectthe role of the employee.",
+      choices: [
+        `
+        Controller, 
+        Accounts Receivable, 
+        Accounts Payable, 
+        Property Manager, 
+        Leasing Agent, 
+        Human Resources Manager, 
+        Marketing Analyst, 
+        Marketing Assistant
+      `
+    ]
+    },
+    {
+      type: "list",
+      name: "managerId",
+      message: "Select the manager of the employee.",
+      choices: [1,2,7],
+    }
+  ];
+
+  inquirer.prompt(questions).then(saveEmployee);
+}
+
+
+
+
+
+
 
 // any bonuses will go here
 function calculateBonuses() {
