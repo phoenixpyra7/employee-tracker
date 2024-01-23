@@ -1,9 +1,10 @@
 // importing packages
 const { prompt } = require("inquirer");
 const db = require("./db/connection.js");
+const { NULL } = require("mysql2/lib/constants/types.js");
 require("console.table");
 
-const questions = [
+const questions = [ //can i delete this?
   {
     type: "list",
     name: "answer",
@@ -153,16 +154,16 @@ function addRole() {
 
 //Adding a new employee
 function addAnEmployee(roles, managers) { // shouldn't this have more info in the ()?
-  prompt.questions = [ //should I remove the word questions?
+  prompt.questions = [ //should I remove the word-> "" questions"?
     {
       type: "input",
       name: "firstName",
-      message: "Enter the first name of the employee.",
+      message: "Enter the first name of the employee.", //should I add a salary question? 
   },
     {
       type: "input",
       name: "lastName",
-      message: "Enterthe last name of the employee.",
+      message: "Enter the last name of the employee.",
     },
     {
       type: "list",
@@ -185,7 +186,7 @@ function addAnEmployee(roles, managers) { // shouldn't this have more info in th
       type: "list",
       name: "managerId",
       message: "Select the manager of the employee.",
-      choices: [1,2,7],
+      choices: [1,2,7, NULL],
     }
   ];
 
@@ -199,6 +200,6 @@ function addAnEmployee(roles, managers) { // shouldn't this have more info in th
 
 
 // any bonuses will go here
-function calculateBonuses() {
-  // code to calculate bonuses for employees
-}
+// function calculateBonuses() {
+//   // code to calculate bonuses for employees
+// }
