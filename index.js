@@ -15,16 +15,27 @@ const questions = [
 // set up inquirer here- inquirer.prompt(questions)?
 function main() {
   prompt(questions).then((res) => {
-    // this will all be in your inquirer's .then()
-    if (res.answer === "view all employees") {
+    // this will all be in your inquirer's .then() - not sure if correctly done
+    // this is to view info 
+    if (res.answer === "View All Employees") {
       viewAllEmployees();
-    } else if (res.answer === "view all departments") {
+    } else if (res.answer === "View All Departments") {
       viewAllDepartments();
       // make an else if for view all roles
-    } else if (res.answer === "add a department") {
+    }  else if (res.answer === "View All Roles") {
+        viewAllRoles();
+    // This is to add info 
+    } else if (res.answer === "Add An Employee") {
+        addEmployee();
+    } else if (res.answer === "Add A Department") {
+        addDepartment();
+    } else if (res.answer === "Add A Role") {
+        addRole();
+
+    // this will exit, need to fix code
+    } else if (res.answer === "Exit") {
       addDepartment();
-    }
-  });
+  }});
 }
 
 // if/else statement or switch statement here
