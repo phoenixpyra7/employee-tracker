@@ -3,15 +3,30 @@ const { prompt } = require("inquirer");
 const db = require("./db/connection.js");
 const { NULL } = require("mysql2/lib/constants/types.js");
 require("console.table");
-
-const questions = [ //can i delete this?
+const questions = [ 
   {
     type: "list",
     name: "answer",
     message: "What would you like to do?",
-    choices: ["view all employees", "view all departments"],
+    choices: [
+      "View All Departments", 
+      "View All Roles", 
+      "View All Employees", 
+      // "View All Salarys",
+      // "Add An Employee",
+      "Add A Department",
+      // "Add A Role",
+      // "Add A Salary",
+      // "Update Employee",
+      // "Update Department",
+      // "Update Role",
+      // "Update Salary",
+      "Exit Database"
+    ],
   },
 ];
+
+
 
 // set up inquirer here- inquirer.prompt(questions)?
 function main() {
@@ -30,7 +45,7 @@ function main() {
 
     // This is to add info 
     } else if (res.answer === "Add An Employee") {
-      addEmployee();
+      addAnEmployee();
     } else if (res.answer === "Add A Department") {
       addDepartment();
     } else if (res.answer === "Add A Role") {
@@ -51,7 +66,8 @@ function main() {
     // this will exit, need to fix code
     } else if (res.answer === "Exit Database") {
       db.end();
-      console.log("You have sucessfully exited the database");  
+      console.log("You have sucessfully exited the database"); 
+      return process.exit(); 
   }});
 }
 
@@ -65,7 +81,9 @@ function viewAllEmployees() {
   // code to retrieve all employees from the database
   db.promise()
     .query(`SELECT * FROM employees`)
-    .then(([rows]) => {
+    // .then((response) => {
+    //   console.log(response)
+      .then(([rows]) => {
       console.table(rows);
     })
     .then(() => main())
@@ -122,7 +140,7 @@ function addDepartment() {
   }).then(res => {
     let department = res.department
     db.promise()
-      .query("INSERT INTO departments SET ?", {department})
+      .query("INSERT INTO departments (name) VALUES (?); ", [department])
       .then(() => {
         console.log(`Added ${department} to departments`);
       })
@@ -190,11 +208,10 @@ function addAnEmployee(roles, managers) { // shouldn't this have more info in th
     }
   ];
 
-  inquirer.prompt(questions).then(saveEmployee);
+  prompt(questions).then(saveEmployee);
 }
 
-
-
+main();
 
 
 
