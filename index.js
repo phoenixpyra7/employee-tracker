@@ -14,7 +14,7 @@ const questions = [
       "View All Employees", 
       "Add A Department", // this seems to be working?
       "Add A Role", //still not working after all prompts answered
-      // "Add An Employee", //haven't tested this fully
+      "Add An Employee", //haven't tested this fully
       // "Update AnEmployee Role", // dont think i have all the code for this, cannot find might have accidentally deleted it
       "Exit Database"
     ],
@@ -25,7 +25,7 @@ const questions = [
 
 // set up inquirer here. this will all be in the inquirer"s .then() 
 function main() {
-  prompt(questions).then((res) => {
+  prompt(questions).then((res) => { ///  is this section repetitive code of line 6?
 
 //main menu actions
     // this is to view all info 
@@ -108,7 +108,7 @@ function viewAllEmployees() {
     });
 }
 
-
+//// QUESTION, would it be more effie=cient to make all functions into nesting dolls so i can update or add/delete as needed with out seperate sections?
 
 // Adding a new department
 function addDepartment() {
@@ -164,7 +164,7 @@ function addRole() {
   prompt([
   {
     type: "input",
-    name: "role",
+    name: "title",
     message: "What role would you like to add?",
   },
   {
@@ -174,7 +174,7 @@ function addRole() {
   },
   {
     type: "list",
-    name: "departmentId",
+    name: "department_id",
     message: "What is the department for the role:",
     choices: () => db.promise().query("SELECT * FROM departments").then(([rows]) => rows.map(department => ({
         name: department.name,
@@ -183,13 +183,10 @@ function addRole() {
     ),
   },
 ]).then(res => {
-    let role = res.role;
-    let salary = res.salary;
-    let departmentId = res.departmentId;
     db.promise()
-      .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?]", [role, salary, departmentId]) 
+      .query("INSERT INTO roles SET ?", res) 
       .then(() => {
-        console.log(`Added ${role} to roles`);
+        console.log(`Added ${res.title} to roles`);
       })
       .then(() => main())
       .catch((err) => {
@@ -240,47 +237,50 @@ function addRole() {
 
 
 //Adding a new employee
-function addAnEmployee() { // shouldn"t this have more info in the ()?
-  prompt.questions = [ 
+function addAnEmployee() { 
+  prompt([ 
     {
       type: "input",
-      name: "firstName",
+      name: "first_name",
       message: "Enter the first name of the employee.", 
   },
     {
       type: "input",
-      name: "lastName",
+      name: "last_name",
       message: "Enter the last name of the employee.",
     },
     {
       type: "list",
-      name: "roleId",
+      name: "role_id",
       message: "Select the role of the employee.",
-      choices: [
-        `
-        Controller, 
-        Accounts Receivable, 
-        Accounts Payable, 
-        Property Manager, 
-        Leasing Agent, 
-        Human Resources Manager, 
-        Marketing Analyst, 
-        Marketing Assistant
-      `
-    ]
+      choices: () => db.promise().query("SELECT * FROM roles").then(([rows]) => rows.map(role => ({
+        name: role.title, 
+        value: role.id, 
+    })))
     },
     {
-      type: "list",
-      name: "managerId",
+      type: "list", 
+      name: "manager_id", 
       message: "Select the manager of the employee.",
-      choices: [1,2,7, NULL], //NEVER GOT TO THIS AND THIS ISNT WORKING************
+      choices: () => db.promise().query("SELECT * FROM employees").then(([rows]) => rows.map(manager => ({
+        name: manager.first_name + " " + manager.last_name,
+        value: manager.id,
+    }))) 
     }
-  ];
-
-  prompt(questions).then(saveEmployee);
+  ]).then(res => {
+    db.promise()
+      .query("INSERT INTO employees SET ?", res) 
+      .then(() => {
+        console.log(`Added ${res.first_name} ${ res.last_name} to employees`);
+      })
+      .then(() => main())
+      .catch((err) => {
+        console.error(`Error with addEmployee: ${err}`);
+      });
+  });
 }
 
-main();
+main();  //this is the same as using init but i want it to be more taylored so i am using main.
 
 
 
