@@ -12,10 +12,10 @@ const questions = [
       "View All Departments", 
       "View All Roles", 
       "View All Employees", 
-      "Add A Department",
-      "Add A Role",
-      // "Add An Employee",
-      // "Update AnEmployee Role",
+      "Add A Department", // this seems to be working?
+      "Add A Role", //still not working after all prompts answered
+      // "Add An Employee", //haven't tested this fully
+      // "Update AnEmployee Role", // dont think i have all the code for this, cannot find might have accidentally deleted it
       "Exit Database"
     ],
   },
@@ -23,11 +23,11 @@ const questions = [
 
 
 
-// set up inquirer here- inquirer.prompt(questions)?
+// set up inquirer here. this will all be in the inquirer"s .then() 
 function main() {
   prompt(questions).then((res) => {
-    // this will all be in your inquirer"s .then() - not sure if correctly done
 
+//main menu actions
     // this is to view all info 
     if (res.answer === "View All Departments") {
       viewAllDepartments();
@@ -48,7 +48,7 @@ function main() {
     // } else if (res.answer === "Add A Salary") {
     //   addSalary();
 
-    // this is to update info 
+    // this is to update employee role info 
     } else if (res.answer === "Update An Employee Role") {
       updateAnEmployeeRole(); 
     // } else if (res.answer === "Update Department") {
@@ -61,17 +61,13 @@ function main() {
     // this will exit th db
     } else if (res.answer === "Exit Database") {
       db.end();
-      console.log("You have sucessfully exited the database"); 
+      console.log("You have sucessfully exited the database"); // added confirmation message
       return process.exit(); 
   }});
 }
 
-// if/else statement or switch statement here
-// this will be based off of the user input
-// it will trigger the db functions
 
-
-// db functions
+//db view all functions
 
 function viewAllDepartments() {
   // code to retrieve all departments from the database
@@ -162,9 +158,8 @@ function addDepartment() {
 
 
 
-
-
 //Adding a new role
+
 function addRole() {
   prompt([
   {
@@ -192,7 +187,7 @@ function addRole() {
     let salary = res.salary;
     let departmentId = res.departmentId;
     db.promise()
-      .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?]", [role, salary, departmentId]) // added ind instead of id
+      .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?]", [role, salary, departmentId]) 
       .then(() => {
         console.log(`Added ${role} to roles`);
       })
@@ -278,7 +273,7 @@ function addAnEmployee() { // shouldn"t this have more info in the ()?
       type: "list",
       name: "managerId",
       message: "Select the manager of the employee.",
-      choices: [1,2,7, NULL], //NEVER GOT TO THIS
+      choices: [1,2,7, NULL], //NEVER GOT TO THIS AND THIS ISNT WORKING************
     }
   ];
 
@@ -290,7 +285,7 @@ main();
 
 
 
-// any bonuses will go here
+// any bonuses will go here if I get time
 // function calculateBonuses() {
 //   // code to calculate bonuses for employees
 // }
