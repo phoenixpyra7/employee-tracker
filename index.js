@@ -58,7 +58,7 @@ function main() {
     // } else if (res.answer === "Update Salary") {
     //   updateSalary(); 
 
-    // this will exit, need to fix code
+    // this will exit th db
     } else if (res.answer === "Exit Database") {
       db.end();
       console.log("You have sucessfully exited the database"); 
@@ -121,7 +121,8 @@ function addDepartment() {
     name: "department",
     message: "What department would you like to add?",
   }).then(res => {
-    let department = res.department
+    if (res && res.department) {
+    let department = res.department;
     db.promise()
       .query("INSERT INTO departments (name) VALUES (?); ", [department])
       .then(() => {
@@ -130,9 +131,39 @@ function addDepartment() {
       .then(() => main())
       .catch((err) => {
         console.error(`Error with addDepartment: ${err}`);
-      })
-  })
+      });
+    } else {
+      console.log("Department name cannot be blank");
+      addDepartment();
+    }
+  }).catch((err) => {
+    console.error(`Error with addDepartment: ${err}`);
+  });
 }
+
+// function addDepartment() {
+//   prompt({
+//     type: "input",
+//     name: "department",
+//     message: "What department would you like to add?",
+//   }).then(res => {
+//     let department = res.department
+//     db.promise()
+//       .query("INSERT INTO departments (name) VALUES (?); ", [department])
+//       .then(() => {
+//         console.log(`Added ${department} to departments`);
+//       })
+//       .then(() => main())
+//       .catch((err) => {
+//         console.error(`Error with addDepartment: ${err}`);
+//       })
+//   })
+// }
+
+
+
+
+
 //Adding a new role
 function addRole() {
   prompt([
@@ -150,7 +181,7 @@ function addRole() {
     type: "list",
     name: "departmentId",
     message: "What is the department for the role:",
-    choices: () => db.promise().query("SELECT * FROM departments;").then(([rows]) => rows.map(department => ({
+    choices: () => db.promise().query("SELECT * FROM departments").then(([rows]) => rows.map(department => ({
         name: department.name,
         value: department.id,
     })),
@@ -161,7 +192,7 @@ function addRole() {
     let salary = res.salary;
     let departmentId = res.departmentId;
     db.promise()
-      .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?],", [role, salary, departmentId])
+      .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?]", [role, salary, departmentId]) // added ind instead of id
       .then(() => {
         console.log(`Added ${role} to roles`);
       })
@@ -171,7 +202,6 @@ function addRole() {
       });
   });
 }
-
 
 // function addRole() {
 //   prompt([
@@ -189,28 +219,27 @@ function addRole() {
 //     type: "list",
 //     name: "departmentId",
 //     message: "What is the department for the role:",
-//     choices: db.promise().query("SELECT * FROM departments;").then(([rows]) => rows).then(department => ({
+//     choices: () => db.promise().query("SELECT * FROM departments").then(([rows]) => rows.map(department => ({
 //         name: department.name,
 //         value: department.id,
 //     })),
-//   }
+//     ),
+//   },
 // ]).then(res => {
-//     let role = res.role
-//     let salary = res.salary
-//     let departmentId = res.departmentId
+//     let role = res.role;
+//     let salary = res.salary;
+//     let departmentId = res.departmentId;
 //     db.promise()
-//       .query("INSERT INTO roles (title, salary, department_id) VALUES [newRole, newSalary, newDepartmentId],", [role])
+//       .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?]", ["role", "salary", "departmentId"]) // added ind instead of id
 //       .then(() => {
-//         console.log(`Added ${newRole} to roles`);
+//         console.log(`Added ${role} to roles`);
 //       })
 //       .then(() => main())
 //       .catch((err) => {
 //         console.error(`Error with addRole: ${err}`);
-//       })
-//   })
+//       });
+//   });
 // }
-
-
 
 
 
