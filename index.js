@@ -12,15 +12,10 @@ const questions = [
       "View All Departments", 
       "View All Roles", 
       "View All Employees", 
-      // "View All Salarys",
-      // "Add An Employee",
       "Add A Department",
-      // "Add A Role",
-      // "Add A Salary",
-      // "Update Employee",
-      // "Update Department",
-      // "Update Role",
-      // "Update Salary",
+      "Add A Role",
+      // "Add An Employee",
+      // "Update AnEmployee Role",
       "Exit Database"
     ],
   },
@@ -31,37 +26,37 @@ const questions = [
 // set up inquirer here- inquirer.prompt(questions)?
 function main() {
   prompt(questions).then((res) => {
-    // this will all be in your inquirer's .then() - not sure if correctly done
+    // this will all be in your inquirer"s .then() - not sure if correctly done
 
     // this is to view all info 
-    if (res.answer === "View All Employees") {
-      viewAllEmployees();
-    } else if (res.answer === "View All Departments") {
+    if (res.answer === "View All Departments") {
       viewAllDepartments();
-    }  else if (res.answer === "View All Roles") {
+    } else if (res.answer === "View All Roles") {
       viewAllRoles();
-    }  else if (res.answer === "View All Salarys") { // this may pose a problem so i mispelled it to match
-      viewAllSalarys();
+    }  else if (res.answer === "View All Employees") {
+      viewAllEmployees();
+    // }  else if (res.answer === "View All Salarys") { // this may pose a problem so i mispelled it to match
+    //   viewAllSalarys();
 
     // This is to add info 
-    } else if (res.answer === "Add An Employee") {
-      addAnEmployee();
     } else if (res.answer === "Add A Department") {
       addDepartment();
     } else if (res.answer === "Add A Role") {
       addRole();
-    } else if (res.answer === "Add A Salary") {
-      addSalary();
+    } else if (res.answer === "Add An Employee") {
+      addAnEmployee();
+    // } else if (res.answer === "Add A Salary") {
+    //   addSalary();
 
     // this is to update info 
-    } else if (res.answer === "Update Employee") {
-      updateEmployee(); 
-    } else if (res.answer === "Update Department") {
-      updateDepartment();
-    } else if (res.answer === "Update Role") {
-      updateRole();
-    } else if (res.answer === "Update Salary") {
-      updateSalary(); 
+    } else if (res.answer === "Update An Employee Role") {
+      updateAnEmployeeRole(); 
+    // } else if (res.answer === "Update Department") {
+    //   updateDepartment();
+    // } else if (res.answer === "Update Role") {
+    //   updateRole();
+    // } else if (res.answer === "Update Salary") {
+    //   updateSalary(); 
 
     // this will exit, need to fix code
     } else if (res.answer === "Exit Database") {
@@ -77,18 +72,17 @@ function main() {
 
 
 // db functions
-function viewAllEmployees() {
-  // code to retrieve all employees from the database
+
+function viewAllDepartments() {
+  // code to retrieve all departments from the database
   db.promise()
-    .query(`SELECT * FROM employees`)
-    // .then((response) => {
-    //   console.log(response)
-      .then(([rows]) => {
+    .query(`SELECT * FROM departments`)
+    .then(([rows]) => {
       console.table(rows);
     })
     .then(() => main())
     .catch((err) => {
-      console.error(`Error with viewAllEmployees: ${err}`);
+      console.error(`Error with viewAllDepartments: ${err}`);
     });
 }
 function viewAllRoles() {
@@ -103,33 +97,22 @@ function viewAllRoles() {
       console.error(`Error with viewAllRoles: ${err}`);
     });
 }
-function viewAllDepartments() {
-  // code to retrieve all departments from the database
+function viewAllEmployees() {
+  // code to retrieve all employees from the database
   db.promise()
-    .query(`SELECT * FROM departments`)
-    .then(([rows]) => {
+    .query(`SELECT * FROM employees`)
+    // .then((response) => {
+    //   console.log(response)
+      .then(([rows]) => {
       console.table(rows);
     })
     .then(() => main())
     .catch((err) => {
-      console.error(`Error with viewAllDepartments: ${err}`);
-    });
-}
-function viewAllSalaries() {
-  // code to retrieve all roles from the database
-  db.promise()
-    .query(`SELECT * FROM salarys`)
-    .then(([rows]) => {
-      console.table(rows);
-    })
-    .then(() => main())
-    .catch((err) => {
-      console.error(`Error with viewAllSalarys: ${err}`);
+      console.error(`Error with viewAllEmployees: ${err}`);
     });
 }
 
-// questions will go here
-// inquirer.prompt(questions)
+
 
 // Adding a new department
 function addDepartment() {
@@ -156,12 +139,28 @@ function addRole() {
     type: "input",
     name: "role",
     message: "What role would you like to add?",
+  },
+  {
+    type: "number",   
+    name: "salary",
+    message: "What is the salary of the role",
+  },
+  {
+    type: "list",
+    name: "departmentId",
+    message: "What is the department for the role:",
+    choices: departments.map(department => ({
+        name: department.name,
+        value: department.id,
+    })),
   }).then(res => {
     let role = res.role
+    let newSalary = res.salary
+    let newDepartmentId = res.departmentId
     db.promise()
-      .query("INSERT INTO roles SET ?", {role})
+      .query("INSERT INTO roles (title, salary, department_id) VALUES [newRole, newSalary, newDepartmentId],", [role])
       .then(() => {
-        console.log(`Added ${role} to roles`);
+        console.log(`Added ${newRole} to roles`);
       })
       .then(() => main())
       .catch((err) => {
@@ -171,12 +170,12 @@ function addRole() {
 }
 
 //Adding a new employee
-function addAnEmployee(roles, managers) { // shouldn't this have more info in the ()?
-  prompt.questions = [ //should I remove the word-> "" questions"?
+function addAnEmployee(roles, managers) { // shouldn"t this have more info in the ()?
+  prompt.questions = [ 
     {
       type: "input",
       name: "firstName",
-      message: "Enter the first name of the employee.", //should I add a salary question? 
+      message: "Enter the first name of the employee.", 
   },
     {
       type: "input",
@@ -186,7 +185,7 @@ function addAnEmployee(roles, managers) { // shouldn't this have more info in th
     {
       type: "list",
       name: "roleId",
-      message: "Selectthe role of the employee.",
+      message: "Select the role of the employee.",
       choices: [
         `
         Controller, 
@@ -204,7 +203,7 @@ function addAnEmployee(roles, managers) { // shouldn't this have more info in th
       type: "list",
       name: "managerId",
       message: "Select the manager of the employee.",
-      choices: [1,2,7, NULL],
+      choices: [1,2,7, NULL], //NEVER GOT TO THIS
     }
   ];
 
