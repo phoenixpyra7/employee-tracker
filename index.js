@@ -135,7 +135,8 @@ function addDepartment() {
 }
 //Adding a new role
 function addRole() {
-  prompt({
+  prompt([
+  {
     type: "input",
     name: "role",
     message: "What role would you like to add?",
@@ -149,28 +150,73 @@ function addRole() {
     type: "list",
     name: "departmentId",
     message: "What is the department for the role:",
-    choices: departments.map(department => ({
+    choices: () => db.promise().query("SELECT * FROM departments;").then(([rows]) => rows.map(department => ({
         name: department.name,
         value: department.id,
     })),
-  }).then(res => {
-    let role = res.role
-    let newSalary = res.salary
-    let newDepartmentId = res.departmentId
+    ),
+  },
+]).then(res => {
+    let role = res.role;
+    let salary = res.salary;
+    let departmentId = res.departmentId;
     db.promise()
-      .query("INSERT INTO roles (title, salary, department_id) VALUES [newRole, newSalary, newDepartmentId],", [role])
+      .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?],", [role, salary, departmentId])
       .then(() => {
-        console.log(`Added ${newRole} to roles`);
+        console.log(`Added ${role} to roles`);
       })
       .then(() => main())
       .catch((err) => {
         console.error(`Error with addRole: ${err}`);
-      })
-  })
+      });
+  });
 }
 
+
+// function addRole() {
+//   prompt([
+//   {
+//     type: "input",
+//     name: "role",
+//     message: "What role would you like to add?",
+//   },
+//   {
+//     type: "number",   
+//     name: "salary",
+//     message: "What is the salary of the role",
+//   },
+//   {
+//     type: "list",
+//     name: "departmentId",
+//     message: "What is the department for the role:",
+//     choices: db.promise().query("SELECT * FROM departments;").then(([rows]) => rows).then(department => ({
+//         name: department.name,
+//         value: department.id,
+//     })),
+//   }
+// ]).then(res => {
+//     let role = res.role
+//     let salary = res.salary
+//     let departmentId = res.departmentId
+//     db.promise()
+//       .query("INSERT INTO roles (title, salary, department_id) VALUES [newRole, newSalary, newDepartmentId],", [role])
+//       .then(() => {
+//         console.log(`Added ${newRole} to roles`);
+//       })
+//       .then(() => main())
+//       .catch((err) => {
+//         console.error(`Error with addRole: ${err}`);
+//       })
+//   })
+// }
+
+
+
+
+
+
 //Adding a new employee
-function addAnEmployee(roles, managers) { // shouldn"t this have more info in the ()?
+function addAnEmployee() { // shouldn"t this have more info in the ()?
   prompt.questions = [ 
     {
       type: "input",
