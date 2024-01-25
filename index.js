@@ -218,7 +218,7 @@ function updateAnEmployeeRole() {
   prompt({
     type: "list",
     name: "employee_id",
-    message: "Which employee would you like to update?",
+    message: "Select an employee to update?",
     choices: () => db.promise().query("SELECT * FROM employees").then(([rows]) => rows.map(employee => ({
         name: employee.first_name + " " + employee.last_name,
         value: employee.id,
@@ -228,7 +228,7 @@ function updateAnEmployeeRole() {
     prompt({
       type: "list",
       name: "role_id",
-      message: "What is their new role?",
+      message: "What is the new role?",
       choices: () => db.promise().query("SELECT * FROM roles").then(([rows]) => rows.map(role => ({
           name: role.title,
           value: role.id,
@@ -237,7 +237,7 @@ function updateAnEmployeeRole() {
       db.promise()
         .query("UPDATE employees SET role_id = ? WHERE id = ?", [role_id, employee_id])
         .then(() => {
-          console.log(`Updated employee's role`);
+          console.log(`You successfully updated the employee's role.`);
         })
         .then(() => main()) // return to main menu
         .catch((err) => {
