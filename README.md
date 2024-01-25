@@ -6,4 +6,4 @@ This is a simple command-line interface CMS (content management system) for a co
 
 GitHub Repo:
 
-Video Link:
+Video Link: https://www.awesomescreenshot.com/video/24345744?key=46e1d6bc7b2075579f2e2e0a4b4911b8 
