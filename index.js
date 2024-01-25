@@ -12,10 +12,10 @@ const questions = [
       "View All Departments", 
       "View All Roles", 
       "View All Employees", 
-      "Add A Department", // this seems to be working?
-      "Add A Role", //still not working after all prompts answered
-      "Add An Employee", //haven't tested this fully
-      // "Update AnEmployee Role", // dont think i have all the code for this, cannot find might have accidentally deleted it
+      "Add A Department", 
+      "Add A Role", 
+      "Add An Employee", 
+      "Update An Employee Role",
       "Exit Database"
     ],
   },
@@ -25,7 +25,7 @@ const questions = [
 
 // set up inquirer here. this will all be in the inquirer"s .then() 
 function main() {
-  prompt(questions).then((res) => { ///  is this section repetitive code of line 6?
+  prompt(questions).then((res) => { 
 
 //main menu actions
     // this is to view all info 
@@ -68,7 +68,6 @@ function main() {
 
 
 //db view all functions
-
 function viewAllDepartments() {
   // code to retrieve all departments from the database
   db.promise()
@@ -108,9 +107,8 @@ function viewAllEmployees() {
     });
 }
 
-//// QUESTION, would it be more effie=cient to make all functions into nesting dolls so i can update or add/delete as needed with out seperate sections?
 
-// Adding a new department
+// db function to add a new department
 function addDepartment() {
   prompt({
     type: "input",
@@ -136,30 +134,7 @@ function addDepartment() {
     console.error(`Error with addDepartment: ${err}`);
   });
 }
-
-// function addDepartment() {
-//   prompt({
-//     type: "input",
-//     name: "department",
-//     message: "What department would you like to add?",
-//   }).then(res => {
-//     let department = res.department
-//     db.promise()
-//       .query("INSERT INTO departments (name) VALUES (?); ", [department])
-//       .then(() => {
-//         console.log(`Added ${department} to departments`);
-//       })
-//       .then(() => main())
-//       .catch((err) => {
-//         console.error(`Error with addDepartment: ${err}`);
-//       })
-//   })
-// }
-
-
-
-//Adding a new role
-
+// db function to add a new role
 function addRole() {
   prompt([
   {
@@ -194,49 +169,7 @@ function addRole() {
       });
   });
 }
-
-// function addRole() {
-//   prompt([
-//   {
-//     type: "input",
-//     name: "role",
-//     message: "What role would you like to add?",
-//   },
-//   {
-//     type: "number",   
-//     name: "salary",
-//     message: "What is the salary of the role",
-//   },
-//   {
-//     type: "list",
-//     name: "departmentId",
-//     message: "What is the department for the role:",
-//     choices: () => db.promise().query("SELECT * FROM departments").then(([rows]) => rows.map(department => ({
-//         name: department.name,
-//         value: department.id,
-//     })),
-//     ),
-//   },
-// ]).then(res => {
-//     let role = res.role;
-//     let salary = res.salary;
-//     let departmentId = res.departmentId;
-//     db.promise()
-//       .query("INSERT INTO roles (title, salary, department_id) VALUES [?, ?, ?]", ["role", "salary", "departmentId"]) // added ind instead of id
-//       .then(() => {
-//         console.log(`Added ${role} to roles`);
-//       })
-//       .then(() => main())
-//       .catch((err) => {
-//         console.error(`Error with addRole: ${err}`);
-//       });
-//   });
-// }
-
-
-
-
-//Adding a new employee
+// db function to add a new employee
 function addAnEmployee() { 
   prompt([ 
     {
@@ -279,10 +212,42 @@ function addAnEmployee() {
       });
   });
 }
+// db function to update an existing employee's role
+function updateAnEmployeeRole() {
+  // db function to retrieve all employees to select from
+  prompt({
+    type: "list",
+    name: "employee_id",
+    message: "Which employee would you like to update?",
+    choices: () => db.promise().query("SELECT * FROM employees").then(([rows]) => rows.map(employee => ({
+        name: employee.first_name + " " + employee.last_name,
+        value: employee.id,
+    }))),
+  }) // db function to retrieve all roles to select from which will now be the new role for the employee
+  .then(({employee_id}) => {
+    prompt({
+      type: "list",
+      name: "role_id",
+      message: "What is their new role?",
+      choices: () => db.promise().query("SELECT * FROM roles").then(([rows]) => rows.map(role => ({
+          name: role.title,
+          value: role.id,
+      }))), // this will update the role for the employee
+    }).then(({role_id}) => {
+      db.promise()
+        .query("UPDATE employees SET role_id = ? WHERE id = ?", [role_id, employee_id])
+        .then(() => {
+          console.log(`Updated employee's role`);
+        })
+        .then(() => main()) // return to main menu
+        .catch((err) => {
+          console.error(`Error with updateAnEmployeeRole: ${err}`);
+        });
+    })
+  })
+}
 
-main();  //this is the same as using init but i want it to be more taylored so i am using main.
-
-
+main();  //this is the same as using init but i want it to be more taylored so i chose to use main.
 
 
 // any bonuses will go here if I get time
