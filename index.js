@@ -82,6 +82,7 @@ function viewAllDepartments() {
 }
 function viewAllRoles() {
   // code to retrieve all roles from the database
+  //requesting id/title/salary/deptname and ljoined tables for roles/dept
   db.promise()
     .query(`SELECT roles.id, roles.title, roles.salary, roles.department_id, departments.name FROM roles LEFT JOIN departments ON roles.department_id = departments.id`)
     .then(([rows]) => {
@@ -94,8 +95,29 @@ function viewAllRoles() {
 }
 function viewAllEmployees() {
   // code to retrieve all employees from the database
+  // requesting id/fname/lname/title/salary/deptname, then concatinated manager fname/lname and ljoined tables for roles/dept/emp as mngr.
   db.promise()
-    .query(`SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary FROM employees LEFT JOIN roles ON employees.role_id = roles.id`)
+    .query(`
+    SELECT 
+      employees.id, 
+      employees.first_name, 
+      employees.last_name, 
+      roles.title, 
+      roles.salary,
+      departments.name,
+      CONCAT(
+        managers.first_name, 
+        ' ',
+        managers.last_name
+      ) AS manager
+    FROM employees 
+    LEFT JOIN roles
+    ON employees.role_id = roles.id
+    LEFT JOIN departments
+    ON departments.id = roles.department_id
+    LEFT JOIN employees AS managers
+    ON employees.manager_id = managers.id
+    `)
     // .then((response) => {
     //   console.log(response)
       .then(([rows]) => {
