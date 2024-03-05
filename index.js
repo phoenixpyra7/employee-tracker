@@ -83,7 +83,7 @@ function viewAllDepartments() {
 function viewAllRoles() {
   // code to retrieve all roles from the database
   db.promise()
-    .query(`SELECT * FROM roles`)
+    .query(`SELECT roles.id, roles.title, roles.salary, roles.department_id, departments.name FROM roles LEFT JOIN departments ON roles.department_id = departments.id`)
     .then(([rows]) => {
       console.table(rows);
     })
@@ -95,7 +95,7 @@ function viewAllRoles() {
 function viewAllEmployees() {
   // code to retrieve all employees from the database
   db.promise()
-    .query(`SELECT * FROM employees`)
+    .query(`SELECT employees.id, employees.first_name, employees.last_name, roles.title, roles.salary FROM employees LEFT JOIN roles ON employees.role_id = roles.id`)
     // .then((response) => {
     //   console.log(response)
       .then(([rows]) => {
