@@ -20,11 +20,11 @@ VALUES
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id) /*frst/lst name, role above-index not zero based, mngr if aplcbl*/
 VALUES
-    ('Diane', 'Kaplon', 1, NULL),
-    ('David', 'Douglas', 4, NULL),
-    ('Stu', 'Shaginaw', 5, 2),
-    ('Jessica', 'Gray', 2, 1),
-    ('Alice', 'Kumar', 3, 1),
-    ('Robin', 'DePorter', 6, NULL),
-    ('Maria', 'Velarde', 7, NULL),
-    ('Julia', 'Galtarossa', 8, 7);
+    ('Diane', 'Revlon', 1, NULL),
+    ('Doug', 'Davis', 4, NULL),
+    ('Stuart', 'Smith', 5, 2),
+    ('Jessica', 'Grayson', 2, 1),
+    ('Alice', 'Kuper', 3, 1),
+    ('Robin', 'Carter', 6, NULL),
+    ('Maria', 'Verde', 7, NULL),
+    ('Julia', 'DeRossa', 8, 7);
